@@ -40,12 +40,12 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Page Name') }}</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Blog Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="page_name" type="text" class="form-control @error('page_name') is-invalid @enderror" name="page_name" value="{{ old('page_name') }}" autocomplete="page_name" autofocus>
+                                <input id="blog_name" type="text" class="form-control @error('blog_name') is-invalid @enderror" name="blog_name" value="{{ old('blog_name') }}" autocomplete="blog_name" autofocus>
 
-                                @error('page_name')
+                                @error('blog_name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
