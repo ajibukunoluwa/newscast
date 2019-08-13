@@ -1,79 +1,39 @@
 version: '3'
 services:
-
-  #PHP Service
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: digitalocean.com/php
+  newscast_services:
+    image: creativitykills/nginx-php-server
     container_name: newscast
-    restart: unless-stopped
-    tty: true
-    volumes:
-       - ./:/var/www
-       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
-    working_dir: /var/www
-    networks:
-      - app-network
-
-  #Nginx Service
-  webserver:
-    image: nginx:alpine
-    container_name: webserver
-    restart: unless-stopped
-    tty: true
+    ports:
+      - "44678:80"
     volumes:
       - ./:/var/www
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
-    ports:
-      - "8040:80"
-      - "443:443"
     networks:
-      - app-network
+      - backend
 
-  #MySQL Service
-  db:
-    image: mysql:5.7.22
-    container_name: db
-    restart: unless-stopped
-    tty: true
+  mysql:
+    container_name: db_mysql
+    image: mysql:5.7
+    ports:
+      - "33062:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=ajimoti"
     volumes:
-      - dbdata:/var/lib/mysql
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
-    ports:
-      - "3300:3306"
-    environment:
-      MYSQL_DATABASE: newscast
-      MYSQL_ROOT_PASSWORD: itomija
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      - "./db/mysql/data:/var/lib/mysql"
+      - "./db/mysql/initdb.d:/docker-entrypoint-initdb.d"
     networks:
-      - app-network
-
-  #PHPMYADMIN Service
-  phpmyadmin:
-    image: corbinu/docker-phpmyadmin
-    links:
-      - db:mysql
+      - backend
+  pma:
+    container_name: pma
+    image: phpmyadmin/phpmyadmin
     ports:
-      - 8181:80
+      - "44679:80"
     environment:
-      MYSQL_USERNAME: root
-      MYSQL_ROOT_PASSWORD: itomija
-      MYSQL_PORT_3306_TCP_ADDR: db
+      - "PMA_HOST=db_mysql"
+      - "MYSQL_DATABASE=newscast"
+      - "MYSQL_ROOT_PASSWORD=ajimoti"
     networks:
-        - app-network
+      - backend
 
-#Docker Networks
 networks:
-  app-network:
+  backend:
     driver: bridge
-
-#Volumes
-volumes:
-  dbdata:
-    driver: local

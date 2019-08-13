@@ -38,8 +38,8 @@
                                 {{ __('Logout') }}
                             </a>
 
-                            <a class="dropdown-item" href="{{ url('/blog/' . $blog->slug)}}">Blog</a>
-                            <a class="dropdown-item" href="{{ url('/blog/' . $blog->slug . '/edit')}}">Blog Settings</a>
+                            {{-- <a class="dropdown-item" href="{{ url('/blog/' . $blog->slug)}}">Blog</a> --}}
+                            {{-- <a class="dropdown-item" href="{{ url('/blog/' . $blog->slug . '/edit')}}">Blog Settings</a> --}}
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
